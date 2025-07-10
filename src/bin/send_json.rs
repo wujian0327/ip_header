@@ -1,5 +1,5 @@
 use reqwest::Client;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -21,8 +21,8 @@ async fn main() -> Result<(), reqwest::Error> {
 
     // 发送一个 POST 请求，并附带 JSON 数据
     let res = client
-        .post("http://172.23.16.1:8080")  // 替换为你想发送请求的 URL
-        .json(&data)                      // 将结构体序列化为 JSON 发送
+        .post("http://106.54.227.154:8001") // 替换为你想发送请求的 URL
+        .json(&data) // 将结构体序列化为 JSON 发送
         .send()
         .await?;
 
