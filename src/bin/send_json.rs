@@ -21,7 +21,7 @@ async fn main() -> Result<(), reqwest::Error> {
 
     // 发送一个 POST 请求，并附带 JSON 数据
     let res = client
-        .post("http://106.54.227.154:8001") // 替换为你想发送请求的 URL
+        .post("http://127.0.0.1:8001/json") // 替换为你想发送请求的 URL
         .json(&data) // 将结构体序列化为 JSON 发送
         .send()
         .await?;
