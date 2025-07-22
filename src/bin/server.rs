@@ -75,6 +75,7 @@ fn main() {
                                     println!("  目标端口: \t{}", tcp_packet.get_destination());
                                     println!("  序号:\t{}", tcp_packet.get_sequence());
                                     println!("  确认号:\t{}", tcp_packet.get_acknowledgement());
+                                    println!("  flag:\t{}", tcp_packet.get_flags());
                                     println!("  头部长度:\t{}", tcp_packet.get_data_offset());
                                     println!("  options:\t{:?}", tcp_packet.get_options());
                                     println!("  数据内容:\t{:?}", tcp_packet.payload());

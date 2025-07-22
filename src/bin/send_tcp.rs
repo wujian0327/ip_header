@@ -15,8 +15,8 @@ fn main() {
     let dst_port = 8001;
     let src_port = 54321;
     // let dst_addr: Ipv4Addr = "222.20.126.106".parse().unwrap();
-    let from_addr: Ipv4Addr = "172.23.25.59".parse().unwrap();
-    let dst_addr: Ipv4Addr = "106.54.227.154".parse().unwrap();
+    let from_addr: Ipv4Addr = "172.20.223.162".parse().unwrap();
+    let dst_addr: Ipv4Addr = "172.20.223.162".parse().unwrap();
 
     // 负载数据
     let payload = b"Hello, Biaoshi!";
@@ -53,7 +53,7 @@ fn main() {
     ip_packet.set_total_length((ip_header_len + tcp_total_len) as u16);
     ip_packet.set_ttl(64);
     ip_packet.set_next_level_protocol(IpNextHeaderProtocols::Tcp);
-    ip_packet.set_source(std::net::Ipv4Addr::new(172, 23, 25, 59).into());
+    ip_packet.set_source(from_addr);
     ip_packet.set_destination(dst_addr);
     ip_packet.set_payload(tcp_packet.packet());
 
