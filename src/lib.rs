@@ -1,6 +1,6 @@
 use pnet::packet::tcp::{MutableTcpPacket, TcpPacket};
-use pnet::packet::{MutablePacket, Packet, PacketSize};
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use pnet::packet::{MutablePacket, Packet};
+use std::net::Ipv4Addr;
 
 /// 计算 TCP 校验和
 ///
@@ -52,8 +52,6 @@ pub fn modify_tcp_options(
     origin_tcp_packet: TcpPacket,
     from_addr: Ipv4Addr,
     to_addr: Ipv4Addr,
-    from_port: u16,
-    to_port: u16,
 ) -> Vec<u8> {
     // 获取原始的 TCP 各个字段
     let origin_packet = origin_tcp_packet.packet();
@@ -61,7 +59,7 @@ pub fn modify_tcp_options(
 
     //新增options字段
     let mut options_buf = Vec::from(&[
-        253, 12, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10,
+        253, 12, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
     ]);
     options_buf.extend_from_slice(&*origin_tcp_packet.get_options_raw().to_vec());
 
@@ -81,18 +79,15 @@ pub fn modify_tcp_options(
     new_tcp_packet_mut
         .get_options_raw_mut()
         .copy_from_slice(&options_buf);
-    // 端口调整
-    new_tcp_packet_mut.set_source(from_port);
-    new_tcp_packet_mut.set_destination(to_port);
 
     // 将原始数据（如果有）复制到新的 TCP 包中
     new_tcp_packet_mut.set_payload(origin_payload);
 
     //重新计算checksum
     new_tcp_packet_mut.set_checksum(0);
-
     let check = tcp_checksum(from_addr, to_addr, new_tcp_packet_mut.packet());
     new_tcp_packet_mut.set_checksum(check);
+
     // 返回新的TCP 数据流
     new_tcp_packet_mut.packet().to_vec()
 }

@@ -1,9 +1,7 @@
 use anyhow::Result;
-use ip_header::{modify_tcp_options, tcp_checksum};
+use ip_header::modify_tcp_options;
 use pnet::packet::ipv4::Ipv4Packet;
-use pnet::packet::tcp::MutableTcpPacket;
-use pnet::packet::{MutablePacket, Packet, tcp::TcpPacket};
-use std::net::Ipv4Addr;
+use pnet::packet::tcp::TcpPacket;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 
@@ -24,7 +22,7 @@ async fn handle_connection(mut client: TcpStream) -> Result<()> {
         let dest_port = tcp_packet.get_destination();
 
         // 修改 TCP 选项（如果需要）
-        let new_tcp_packet = modify_tcp_options(tcp_packet, from_ip, dest_ip, from_port, dest_port);
+        let new_tcp_packet = modify_tcp_options(tcp_packet, from_ip, dest_ip);
 
         let from_addr = format!("{}:{}", from_ip, from_port);
         println!("From addr: {}", from_addr);

@@ -2,13 +2,12 @@ use anyhow::Result;
 use ip_header::modify_tcp_options;
 use pnet::datalink;
 use pnet::datalink::Channel::Ethernet;
+use pnet::packet::Packet;
 use pnet::packet::ethernet::{EtherTypes, EthernetPacket};
 use pnet::packet::ip::IpNextHeaderProtocols;
 use pnet::packet::ipv4::{Ipv4Packet, MutableIpv4Packet};
 use pnet::packet::tcp::TcpPacket;
-use pnet::packet::{Packet, PacketSize};
-use pnet::transport::{TransportChannelType::Layer3, ipv4_packet_iter, transport_channel};
-use std::net::{IpAddr, Ipv4Addr};
+use std::net::Ipv4Addr;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 
@@ -68,11 +67,10 @@ async fn main() -> Result<()> {
                                     println!("TCP Options:\t {:?}", tcp_packet.get_options());
                                     println!("TCP Data length:\t {:?}", tcp_packet.payload().len());
                                     // 修改 TCP 选项
-                                    let from_ip = ip_packet.get_source();
+                                    // let from_ip = ip_packet.get_source();
                                     let dest_ip = ip_packet.get_destination();
-                                    let new_tcp_packet = modify_tcp_options(
-                                        tcp_packet, local_addr, dest_addr, local_port, dest_port,
-                                    );
+                                    let new_tcp_packet =
+                                        modify_tcp_options(tcp_packet, local_addr, dest_addr);
                                     // 重新构造IP数据包
                                     let ip_size = (ip_packet.get_header_length() * 4) as usize
                                         + new_tcp_packet.len();
