@@ -2,6 +2,8 @@ use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
 use tokio::task;
 
+pub mod entity;
+
 #[tokio::main]
 async fn main() -> io::Result<()> {
     // 创建并绑定 TCP 监听器到本地地址

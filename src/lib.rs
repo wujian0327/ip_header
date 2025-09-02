@@ -1,6 +1,10 @@
 use pnet::packet::tcp::{MutableTcpPacket, TcpPacket};
 use pnet::packet::{MutablePacket, Packet};
+use rand::Rng;
+use rand::distributions::Alphanumeric;
 use std::net::Ipv4Addr;
+
+pub mod entity;
 
 /// 计算 TCP 校验和
 ///
@@ -52,15 +56,15 @@ pub fn modify_tcp_options(
     origin_tcp_packet: TcpPacket,
     from_addr: Ipv4Addr,
     to_addr: Ipv4Addr,
+    mark_id: String,
 ) -> Vec<u8> {
     // 获取原始的 TCP 各个字段
     let origin_packet = origin_tcp_packet.packet();
     let origin_payload = origin_tcp_packet.payload();
 
     //新增options字段
-    let mut options_buf = Vec::from(&[
-        253, 12, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
-    ]);
+    let mut options_buf = Vec::from(&[253, 12]);
+    options_buf.extend_from_slice(mark_id.as_bytes());
     options_buf.extend_from_slice(&*origin_tcp_packet.get_options_raw().to_vec());
 
     // 计算新的 TCP 头部长度
@@ -90,4 +94,12 @@ pub fn modify_tcp_options(
 
     // 返回新的TCP 数据流
     new_tcp_packet_mut.packet().to_vec()
+}
+
+pub fn generate_mark_id() -> String {
+    rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(10)
+        .map(char::from)
+        .collect()
 }

@@ -15,8 +15,8 @@ fn main() {
     let dst_port = 8001;
     let src_port = 54321;
     // let dst_addr: Ipv4Addr = "222.20.126.106".parse().unwrap();
-    let from_addr: Ipv4Addr = "172.20.223.162".parse().unwrap();
-    let dst_addr: Ipv4Addr = "172.20.223.162".parse().unwrap();
+    let from_addr: Ipv4Addr = "192.168.1.53".parse().unwrap();
+    let dst_addr: Ipv4Addr = "222.20.126.106".parse().unwrap();
 
     // 负载数据
     let payload = b"Hello, Biaoshi!";
